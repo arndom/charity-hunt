@@ -1,12 +1,13 @@
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react'
+
 import { Button } from '@material-ui/core';
 import { LocationOn } from '@material-ui/icons';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import Geocode from "react-geocode";
+import { useHistory } from 'react-router-dom';
+import * as ROUTES from "../constants/routes"
 
-// import Location from '../components/Location';
 import GeoLocationMap  from '../components/GeoLocationMap';
-// import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-// import { Carousel } from 'react-responsive-carousel';
 import Footer from '../components/Footer';
 
 const CHARITY_KEY = process.env.REACT_APP_GLOBAL_GIVING_KEY
@@ -15,9 +16,15 @@ function Landing() {
 
     const [lat, setLat] = useState(0);
     const [long, setLong] = useState(0);
+    const [iso, setISO] = useState("");
 
     const [activePrjs, setActivePrjs] = useState(0);
     const [totalPrjs, setTotalPrjs] = useState(0);
+
+    const history = useHistory();
+
+    const myRef = useRef(null);
+    const executeScroll = () => myRef.current.scrollIntoView()    
 
     async function fetchActiveProject(){
         const response = await axios.get(`https://api.globalgiving.org/api/public/projectservice/all/projects/active?api_key=${CHARITY_KEY}`)
@@ -39,7 +46,8 @@ function Landing() {
                     title: project.title,
                     longTermImpact:project.longTermImpact,
                     logo: project.organization.logoUrl,
-                    region: project.region 
+                    region: project.region ,
+                    isoCountry: project.iso3166CountryCode
                 }
             }
         ))
@@ -65,12 +73,13 @@ function Landing() {
             (theme) => theme.name
         ))
     }
-    
+
     const getPosition = () => {
 
         if(navigator.geolocation){
             navigator.geolocation.getCurrentPosition( (position) => {
-                console.log(position)
+                // console.log(position)
+                // console.log(navigator)
                 setLat(position.coords.latitude)
                 setLong(position.coords.longitude)
               }
@@ -81,6 +90,20 @@ function Landing() {
 
     }
 
+    function geo(){
+        Geocode.setApiKey(process.env.REACT_APP_GKEY);
+        
+        Geocode.fromLatLng(lat, long).then(
+            (response) => {
+                // console.log(response.results[0].address_components[5].short_name)
+                setISO(response.results[0].address_components[5].short_name)
+            },
+            (error) => {
+              console.error(error);
+            }
+        );
+    }
+
     useEffect(()=>{
         getPosition()
         fetchActiveProject()
@@ -88,6 +111,11 @@ function Landing() {
         fetchRegions()
         fetchThemes()
     },[])
+
+    useEffect(()=>{
+        geo()
+        // eslint-disable-next-line
+    },[lat,long])
 
     return (
         <div className = "container">
@@ -101,8 +129,8 @@ function Landing() {
                     </h1>
 
                     <div className = "landing_navLinks">
-                        <p style= {{display:"flex" }}>Near you <LocationOn style ={{color: "#097159", fontSize:"inherit", paddingLeft:"5px"}}/></p>
-                        <p>About us</p>
+                        <p onClick = {executeScroll} style= {{display:"flex" }}>Near you <LocationOn style ={{color: "#097159", fontSize:"inherit", paddingLeft:"5px"}}/></p>
+                        <p onClick ={()=>history.push(ROUTES.ABOUT)} >About us</p>
                         
                     </div>
                 </div>
@@ -123,9 +151,9 @@ function Landing() {
                         Donate
                     </Button>
                 </div>
-
+                <div ref={myRef}></div>
                 {/* map showing charities near you */}
-                <div className  = "landing__location">
+                <div  className  = "landing__location">
 
                     <div className = "landing__locationLeft">
                         <h1>
@@ -135,7 +163,7 @@ function Landing() {
                         <iframe title = "map_pointer" src="https://giphy.com/embed/JTbzTFf5EuAiHb3O9Z" width="100" height="100" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
                     </div>
  
-                    <GeoLocationMap lat ={lat} long = {long}/>
+                    <GeoLocationMap lat ={lat} long = {long} iso ={iso}/>
                 </div>
                 
                 {/*info  */}

@@ -53,6 +53,7 @@
 
 .landing_navLinks > p{
     padding-right: 1.4rem;
+    cursor: pointer;
 }
 
 .landing__banner{
@@ -77,7 +78,7 @@
 }
 
 .landing__location{
-    margin-top: 3rem;
+    margin-top: 2.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -30,7 +30,7 @@ function Footer() {
         >
             <p>Powered by <a href="https://www.globalgiving.org/" target = "_blank"  rel="noreferrer" style={{color: "white", textDecoration: "none"}}>GlobalGiving</a></p>
 
-            <p style ={{display:"flex", alignItems: "center"}}>If you liked, give a star on github<a class = "pulse" href="https://github.com/arndom/charity-hunt" target = "_blank"  rel="noreferrer" style={{color: "white", fontSize: "1.75rem", textDecoration: "none", textAlign: "center"}}>🌟</a></p>
+            <p style ={{display:"flex", alignItems: "center"}}>If you liked, smash the star on github<a class = "pulse" href="https://github.com/arndom/charity-hunt" target = "_blank"  rel="noreferrer" style={{color: "white", fontSize: "1.25rem", textDecoration: "none", textAlign: "center"}}>🌟</a></p>
             
             <p>Built with 💖 by <a href="https://github.com/arndom" target = "_blank"  rel="noreferrer" style={{color: "white", textDecoration: "underline"}}>arndom</a></p>
         </Box>
