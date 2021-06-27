@@ -1,6 +1,8 @@
 @import "./utils.css";
 @import "./pages/_landing.css";
+@import "./pages/_donation.css";
 @import "./components/_miniMapCard.css";
+@import "./components/_card.css";
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');

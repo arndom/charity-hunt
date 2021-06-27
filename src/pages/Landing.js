@@ -28,58 +28,18 @@ function Landing() {
 
     async function fetchActiveProject(){
         const response = await axios.get(`https://api.globalgiving.org/api/public/projectservice/all/projects/active?api_key=${CHARITY_KEY}`)
-        // console.log(response.data.projects)
-        // console.log(response.data.projects.numberFound)
         setActivePrjs(response.data.projects.numberFound)
-        console.log(response.data.projects.project.map(
-            (project) => { 
-                return{
-                    id: project.id,
-                    image: project.image.imagelink[3].url,
-                    latitude: project.latitude,
-                    longitude: project.longitude,
-                    need: project.need,
-                    urlCause:project.organization.url,
-                    projectLink: project.projectLink,
-                    summary: project.summary,
-                    themes: project.themes.theme,
-                    title: project.title,
-                    longTermImpact:project.longTermImpact,
-                    logo: project.organization.logoUrl,
-                    region: project.region ,
-                    isoCountry: project.iso3166CountryCode
-                }
-            }
-        ))
     }
 
     async function fetchTotalProject(){
         const response = await axios.get(`https://api.globalgiving.org/api/public/projectservice/all/projects?api_key=${CHARITY_KEY}`)
-        // console.log(response.data.projects)
-        console.log(response.data.projects.numberFound)
         setTotalPrjs(response.data.projects.numberFound)
-    }
-
-    async function fetchRegions(){
-        const response  = await axios.get(`https://api.globalgiving.org/api/public/projectservice/regions?api_key=${CHARITY_KEY}`)
-        console.log(response.data.regions.region.map(
-            (region) => region.name
-        ))
-    }
-
-    async function fetchThemes(){
-        const response  = await axios.get(`https://api.globalgiving.org/api/public/projectservice/themes?api_key=${CHARITY_KEY}`)
-        console.log(response.data.themes.theme.map(
-            (theme) => theme.name
-        ))
     }
 
     const getPosition = () => {
 
         if(navigator.geolocation){
             navigator.geolocation.getCurrentPosition( (position) => {
-                // console.log(position)
-                // console.log(navigator)
                 setLat(position.coords.latitude)
                 setLong(position.coords.longitude)
               }
@@ -95,7 +55,6 @@ function Landing() {
         
         Geocode.fromLatLng(lat, long).then(
             (response) => {
-                // console.log(response.results[0].address_components[5].short_name)
                 setISO(response.results[0].address_components[5].short_name)
             },
             (error) => {
@@ -108,8 +67,6 @@ function Landing() {
         getPosition()
         fetchActiveProject()
         fetchTotalProject()
-        fetchRegions()
-        fetchThemes()
     },[])
 
     useEffect(()=>{
@@ -141,13 +98,16 @@ function Landing() {
 
                     <p>Through donations, providing aid, helping one another we can all make a difference.</p>
 
-                    <Button style = {{
-                        textTransform: "none",
-                        background: "#0B7059",
-                        color: "white",
-                        width: "5rem",
-                        fontWeight: "400"
-                    }}>
+                    <Button 
+                        style = {{
+                            textTransform: "none",
+                            background: "#0B7059",
+                            color: "white",
+                            width: "5rem",
+                            fontWeight: "400"
+                        }}
+                        onClick = {() => history.push(ROUTES.DONATION) }
+                    >
                         Donate
                     </Button>
                 </div>
